@@ -1,0 +1,31 @@
+.hero-slider,
+.slick-slider,
+.slick-list,
+.slick-track {
+  height: 100%;
+}
+
+/* .single-slider {
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+} */
+
+/* Ảnh nền riêng cho từng slide */
+.slider-bg1 {
+  background-image: url('../../assets/images/hero/slider-bg1.jpg');
+  height: 100%;
+}
+
+.slider-bg2 {
+  background-image: url('../../assets/images/hero/slider-bg2.jpg');
+  height: 100%;
+}
+
+/* Ảnh banner nhỏ bên phải nếu có */
+/* .hero-small-banner {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+} */

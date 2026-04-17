@@ -1,0 +1,83 @@
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
+
+function Header() {
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
+
+  // 👉 lấy dữ liệu giỏ hàng từ Context
+  const { cartItems, total, cartId, refreshCart } = useContext(CartContext);
+
+  // Hàm tìm kiếm
+  const handleSearch = () => {
+    const keyword = query.trim();
+    if (!keyword) return;
+    navigate(`/products?search=${keyword}`);
+  };
+
+  // Hàm logout
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("cartId");
+    localStorage.removeItem("session_id");
+    window.location.href = "/login";
+  };
+
+  // Hàm xóa item khỏi giỏ hàng
+  const handleRemoveItem = async (productId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/cart-item/${cartId}/${productId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      if (res.ok) {
+        // 👉 gọi refreshCart để cập nhật lại giỏ hàng từ backend
+        refreshCart();
+        console.log(`✅ Đã xóa sản phẩm ${productId} khỏi giỏ hàng ${cartId}`);
+      } else {
+        console.error("❌ Lỗi xóa item:", await res.text());
+      }
+    } catch (err) {
+      console.error("❌ Lỗi kết nối khi xóa item:", err);
+    }
+  };
+
+  return (
+    <header>
+      <div>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Tìm sản phẩm..."
+        />
+        <button onClick={handleSearch}>🔍 Tìm kiếm</button>
+      </div>
+
+      <div>
+        <h3>🛒 Giỏ hàng ({cartItems.length} sản phẩm)</h3>
+        <p>Tổng tiền: {total.toLocaleString()} đ</p>
+        <ul>
+          {cartItems.map((item) => (
+            <li key={item.product_id}>
+              {item.product?.name} x {item.quantity}{" "}
+              <button onClick={() => handleRemoveItem(item.product_id)}>❌</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <button onClick={handleLogout}>🚪 Logout</button>
+    </header>
+  );
+}
+
+export default Header;
