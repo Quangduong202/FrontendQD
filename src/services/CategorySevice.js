@@ -1,7 +1,7 @@
 // services/categoryService.js
 import axios from "axios";
 
-const API_URL = "https://voquangduong-2122110372-c-22.onrender.com/Category";
+const API_URL = "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Category";
 
 /**
  * Lấy tất cả danh mục
