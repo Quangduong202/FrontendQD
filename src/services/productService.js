@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://voquangduong-2122110372-c-22.onrender.com/Product";
+const API_URL = "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Productt";
 
 /**
  * Lấy tất cả sản phẩm

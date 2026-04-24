@@ -13,7 +13,7 @@ function DetailProduct() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/products/${id}`);
+        const res = await fetch(`https://voquangduong-2122110372-c-1-hsnq.onrender.com/Product/${id}`);
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || "Không thể tải sản phẩm");
         setProduct(data.data || data);

@@ -1,7 +1,7 @@
 // services/brandService.js
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/brand";
+const API_URL = "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Brand";
 
 /**
  * Lấy tất cả thương hiệu

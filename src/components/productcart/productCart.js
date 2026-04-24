@@ -24,7 +24,7 @@ function ProductCard({ product = {} }) {
         quantity,
       };
 
-      const res = await fetch("http://localhost:3000/api/cart-item", {
+      const res = await fetch("https://voquangduong-2122110372-c-1-hsnq.onrender.com/CartItem", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

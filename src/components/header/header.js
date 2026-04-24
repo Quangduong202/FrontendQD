@@ -43,7 +43,7 @@ const [query, setQuery] = useState("");
   const handleRemoveItem = async (productId) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/cart-item/${cartId}/${productId}`,
+      `https://voquangduong-2122110372-c-1-hsnq.onrender.com/CartItem/${cartId}/${productId}`,
       {
         method: "DELETE",
         headers: {
