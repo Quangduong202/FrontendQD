@@ -13,62 +13,62 @@ import { useEffect, useState } from "react";
 
 const { Search } = Input;
 
+// 🔥 ĐỔI API nếu bạn deploy mới
+const API = "https://voquangduong-2122110372-c-1-hsnq.onrender.com";
+
 function Products() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [form] = Form.useForm();
 
-  // ================= FETCH PRODUCTS =================
+  // ================= FETCH =================
   const fetchProducts = async () => {
     try {
-      const res = await fetch(
-        "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Product"
-      );
+      const res = await fetch(`${API}/Product`);
       const data = await res.json();
-
-      console.log("PRODUCT DATA:", data);
-
-      // API trả array trực tiếp
-      const list = Array.isArray(data) ? data : data.data;
-
-      setProducts(list || []);
-      setFilteredProducts(list || []);
+      setProducts(data || []);
+      setFilteredProducts(data || []);
     } catch (err) {
       console.error(err);
       message.error("Không load được sản phẩm");
     }
   };
 
-  // ================= FETCH CATEGORY =================
   const fetchCategories = async () => {
     try {
-      const res = await fetch(
-        "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Category"
-      );
+      const res = await fetch(`${API}/Category`);
       const data = await res.json();
-
-      const list = Array.isArray(data) ? data : data.data;
-
-      setCategories(list || []);
+      setCategories(data || []);
     } catch (err) {
       console.error(err);
-      message.error("Không load được danh mục");
+    }
+  };
+
+  const fetchBrands = async () => {
+    try {
+      const res = await fetch(`${API}/Brand`);
+      const data = await res.json();
+      setBrands(data || []);
+    } catch (err) {
+      console.error(err);
     }
   };
 
   useEffect(() => {
     fetchProducts();
     fetchCategories();
+    fetchBrands();
   }, []);
 
   // ================= SEARCH =================
   const handleSearch = (value) => {
     const keyword = value.toLowerCase();
     const filtered = products.filter((p) =>
-      p.name.toLowerCase().includes(keyword)
+      p.name?.toLowerCase().includes(keyword)
     );
     setFilteredProducts(filtered);
   };
@@ -80,16 +80,24 @@ function Products() {
 
       const method = editingProduct ? "PUT" : "POST";
       const url = editingProduct
-        ? `https://voquangduong-2122110372-c-1-hsnq.onrender.com/Product/${editingProduct.id}`
-        : "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Product";
+        ? `${API}/Product/${editingProduct.id}`
+        : `${API}/Product`;
 
       const payload = {
         name: values.name,
-        description: values.description,
+        image: values.image,
         price: values.price,
-        stock: values.stock,
+        oldPrice: values.oldPrice || 0,
+        description: values.description || "",
+        specification: values.specification || "",
+        buyTurn: "0",
+        quantity: values.stock || 0,
         categoryId: values.categoryId,
+        brandId: values.brandId,
       };
+
+      console.log("PAYLOAD:", payload);
+      console.log("URL:", url);
 
       const res = await fetch(url, {
         method,
@@ -100,9 +108,15 @@ function Products() {
       });
 
       const data = await res.json();
+      console.log("RESPONSE:", data);
 
       if (!res.ok) {
-        message.error(data.message || "Lỗi lưu sản phẩm");
+        const errorMsg =
+          data?.title ||
+          Object.values(data?.errors || {}).flat().join(", ") ||
+          "Lỗi lưu sản phẩm";
+
+        message.error(errorMsg);
         return;
       }
 
@@ -123,17 +137,11 @@ function Products() {
   // ================= DELETE =================
   const handleDelete = async (id) => {
     try {
-      await fetch(
-        `https://voquangduong-2122110372-c-1-hsnq.onrender.com/Product/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await fetch(`${API}/Product/${id}`, {
+        method: "DELETE",
+      });
 
-      const newList = products.filter((p) => p.id !== id);
-      setProducts(newList);
-      setFilteredProducts(newList);
-
+      fetchProducts();
       message.success("Xóa thành công");
     } catch (err) {
       console.error(err);
@@ -141,79 +149,83 @@ function Products() {
     }
   };
 
-  // ================= ACTION =================
-  const actionButtons = (_, record) => (
-    <>
-      <Button
-        type="link"
-        onClick={() => {
-          setEditingProduct(record);
-
-          form.setFieldsValue({
-            name: record.name,
-            price: record.price,
-            stock: record.stock,
-            categoryId: record.categoryId,
-            description: record.description,
-          });
-
-          setIsModalVisible(true);
-        }}
-      >
-        Edit
-      </Button>
-
-      <Popconfirm
-        title="Xóa sản phẩm?"
-        onConfirm={() => handleDelete(record.id)}
-      >
-        <Button danger type="link">
-          Delete
-        </Button>
-      </Popconfirm>
-    </>
-  );
-
   // ================= TABLE =================
   const columns = [
     { title: "ID", dataIndex: "id" },
-    { title: "Tên sản phẩm", dataIndex: "name" },
+    { title: "Tên", dataIndex: "name" },
+
+    {
+      title: "Ảnh",
+      dataIndex: "image",
+      render: (img) =>
+        img ? (
+          <img src={img} alt="product" style={{ width: 50 }} />
+        ) : (
+          "N/A"
+        ),
+    },
+
     { title: "Giá", dataIndex: "price" },
-    { title: "Tồn kho", dataIndex: "stock" },
+    { title: "Kho", dataIndex: "quantity" },
 
     {
       title: "Danh mục",
-      dataIndex: "categoryId",
-      render: (id) => {
-        const c = categories.find((x) => x.id === id);
-        return c ? c.name : "Không có";
-      },
+      render: (_, r) =>
+        categories.find((c) => c.id === r.categoryId)?.name || "N/A",
     },
 
     {
-      title: "Ngày tạo",
-      dataIndex: "createdAt",
-      render: (date) => new Date(date).toLocaleString(),
+      title: "Brand",
+      render: (_, r) =>
+        brands.find((b) => b.id === r.brandId)?.name || "N/A",
     },
 
-    { title: "Thao tác", render: actionButtons },
+    {
+      title: "Thao tác",
+      render: (_, record) => (
+        <>
+          <Button
+            type="link"
+            onClick={() => {
+              setEditingProduct(record);
+
+              form.setFieldsValue({
+                name: record.name,
+                image: record.image,
+                price: record.price,
+                stock: record.quantity,
+                categoryId: record.categoryId,
+                brandId: record.brandId,
+                description: record.description,
+              });
+
+              setIsModalVisible(true);
+            }}
+          >
+            Edit
+          </Button>
+
+          <Popconfirm
+            title="Xóa sản phẩm?"
+            onConfirm={() => handleDelete(record.id)}
+          >
+            <Button danger type="link">
+              Delete
+            </Button>
+          </Popconfirm>
+        </>
+      ),
+    },
   ];
 
   // ================= UI =================
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 16,
-        }}
-      >
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
         <Search
-          placeholder="Search product"
+          placeholder="Search"
           onSearch={handleSearch}
           style={{ width: 300 }}
-          allowClear
         />
 
         <Button
@@ -228,11 +240,7 @@ function Products() {
         </Button>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={filteredProducts}
-        rowKey="id"
-      />
+      <Table columns={columns} dataSource={filteredProducts} rowKey="id" />
 
       <Modal
         title={editingProduct ? "Edit Product" : "Add Product"}
@@ -241,8 +249,18 @@ function Products() {
         onCancel={() => setIsModalVisible(false)}
       >
         <Form form={form} layout="vertical">
+
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
             <Input />
+          </Form.Item>
+
+          {/* 🔥 IMAGE */}
+          <Form.Item
+            name="image"
+            label="Image URL"
+            rules={[{ required: true, message: "Nhập link ảnh" }]}
+          >
+            <Input placeholder="https://..." />
           </Form.Item>
 
           <Form.Item name="price" label="Price" rules={[{ required: true }]}>
@@ -253,12 +271,8 @@ function Products() {
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
 
-          <Form.Item
-            name="categoryId"
-            label="Category"
-            rules={[{ required: true }]}
-          >
-            <Select placeholder="Select category">
+          <Form.Item name="categoryId" label="Category" rules={[{ required: true }]}>
+            <Select>
               {categories.map((c) => (
                 <Select.Option key={c.id} value={c.id}>
                   {c.name}
@@ -267,9 +281,20 @@ function Products() {
             </Select>
           </Form.Item>
 
+          <Form.Item name="brandId" label="Brand" rules={[{ required: true }]}>
+            <Select>
+              {brands.map((b) => (
+                <Select.Option key={b.id} value={b.id}>
+                  {b.username}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
           <Form.Item name="description" label="Description">
             <Input.TextArea />
           </Form.Item>
+
         </Form>
       </Modal>
     </>
