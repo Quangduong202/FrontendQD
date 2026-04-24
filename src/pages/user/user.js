@@ -14,7 +14,7 @@ function UserProfile() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/user/${id}`);
+        const res = await axios.get(`https://voquangduong-2122110372-c-1-hsnq.onrender.com/User/${id}`);
         setUser(res.data.data);
       } catch (err) {
         setError(err.response?.data?.message || "❌ Lỗi khi tải dữ liệu người dùng");

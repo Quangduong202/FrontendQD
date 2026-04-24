@@ -8,9 +8,6 @@ const API_URL = "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Productt"
 export const getAllProducts = async () => {
   return await axios.get(API_URL);
 };
-// export const getAllProducts = (params = {}) => {
-//   return axios.get("https://voquangduong-2122110372-c-22.onrender.com/Product", { params });
-// };
 
 /**
  * Lấy sản phẩm theo ID

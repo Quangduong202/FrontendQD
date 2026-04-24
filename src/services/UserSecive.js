@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://voquangduong-2122110372-c-22.onrender.com/User";
+const API_URL = "https://voquangduong-2122110372-c-1-hsnq.onrender.com/User";
 
 /**
  * Đăng ký tài khoản mới

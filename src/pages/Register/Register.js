@@ -35,7 +35,7 @@ function Register() {
     }
 
     try {
-      const res = await axios.post("http://localhost:3000/api/user/register", {
+      const res = await axios.post("https://voquangduong-2122110372-c-1-hsnq.onrender.com/User/register", {
         username: formData.username,
         name: formData.name,
         email: formData.email,

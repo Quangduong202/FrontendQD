@@ -21,7 +21,7 @@ function Users() {
 
   // READ users
   const fetchUsers = () => {
-    fetch("https://voquangduong-2122110372-c-22.onrender.com/User")
+    fetch("https://voquangduong-2122110372-c-1-hsnq.onrender.com/api/User")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data.data);
@@ -49,9 +49,9 @@ function Users() {
   const handleSave = async () => {
     const values = await form.validateFields();
     const method = editingUser ? "PUT" : "POST";
-    const url = editingUser
-      ? `https://voquangduong-2122110372-c-22.onrender.com/User/${editingUser.id}`
-      : "https://voquangduong-2122110372-c-22.onrender.com/User";
+          const url = editingUser
+            ? `https://voquangduong-2122110372-c-1-hsnq.onrender.com/api/User/${editingUser.id}`
+      : "https://voquangduong-2122110372-c-1-hsnq.onrender.com/api/User";
 
     const payload = {
       ...values,
@@ -77,7 +77,7 @@ function Users() {
 
   // DELETE
   const handleDelete = async (id) => {
-    await fetch(`https://voquangduong-2122110372-c-22.onrender.com/User/${id}`, {
+    await fetch(`https://voquangduong-2122110372-c-1-hsnq.onrender.com/api/User/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

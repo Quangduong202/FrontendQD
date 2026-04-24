@@ -23,7 +23,7 @@ function Orders() {
     const [orderDetails, setOrderDetails] = useState([]); 
   // READ orders
   const fetchOrders = () => {
-    fetch("https://voquangduong-2122110372-c-22.onrender.com/Order", {
+    fetch("https://voquangduong-2122110372-c-1-hsnq.onrender.com/Order", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
@@ -55,8 +55,8 @@ function Orders() {
     const values = await form.validateFields();
     const method = editingOrder ? "PUT" : "POST";
     const url = editingOrder
-      ? `https://voquangduong-2122110372-c-22.onrender.com/Order/${editingOrder.id}`
-      : "https://voquangduong-2122110372-c-22.onrender.com/Order";
+      ? `https://voquangduong-2122110372-c-1-hsnq.onrender.com/Order/${editingOrder.id}`
+      : "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Order";
 
     const res = await fetch(url, {
       method,
@@ -79,7 +79,7 @@ function Orders() {
 
   // DELETE
   const handleDelete = async (id) => {
-    await fetch(`https://voquangduong-2122110372-c-22.onrender.com/Order/${id}`, {
+    await fetch(`https://voquangduong-2122110372-c-1-hsnq.onrender.com/Order/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -149,7 +149,7 @@ function Orders() {
  // 👉 Lấy chi tiết sản phẩm trong đơn hàng
   const fetchOrderDetail = async (orderId) => {
     try {
-      const res = await fetch(`https://voquangduong-2122110372-c-22.onrender.com/Order-detail/${orderId}`, {
+      const res = await fetch(`https://voquangduong-2122110372-c-1-hsnq.onrender.com/OrderDetail/${orderId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

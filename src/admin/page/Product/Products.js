@@ -25,7 +25,7 @@ function Products() {
   const fetchProducts = async () => {
     try {
       const res = await fetch(
-        "https://voquangduong-2122110372-c-22.onrender.com/Product"
+        "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Product"
       );
       const data = await res.json();
 
@@ -46,7 +46,7 @@ function Products() {
   const fetchCategories = async () => {
     try {
       const res = await fetch(
-        "https://voquangduong-2122110372-c-22.onrender.com/Category"
+        "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Category"
       );
       const data = await res.json();
 
@@ -80,8 +80,8 @@ function Products() {
 
       const method = editingProduct ? "PUT" : "POST";
       const url = editingProduct
-        ? `https://voquangduong-2122110372-c-22.onrender.com/Product/${editingProduct.id}`
-        : "https://voquangduong-2122110372-c-22.onrender.com/Product";
+        ? `https://voquangduong-2122110372-c-1-hsnq.onrender.com/Product/${editingProduct.id}`
+        : "https://voquangduong-2122110372-c-1-hsnq.onrender.com/Product";
 
       const payload = {
         name: values.name,
@@ -124,7 +124,7 @@ function Products() {
   const handleDelete = async (id) => {
     try {
       await fetch(
-        `https://voquangduong-2122110372-c-22.onrender.com/Product/${id}`,
+        `https://voquangduong-2122110372-c-1-hsnq.onrender.com/Product/${id}`,
         {
           method: "DELETE",
         }
